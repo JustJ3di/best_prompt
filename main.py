@@ -86,7 +86,7 @@ ordered_data = sorted(data,key=lambda data: data.get('id'))
 print(len(ordered_data))
 
 
-prompt_tecnique = ["Basic","Naive","CWE-Specific","Comprehensive","Persona/Memetic"] 
+prompt_tecnique = ["Basic","Naive-Secure","CWE-Specific","Comprehensive","Persona/Memetic Proxy"] 
 
 
 basis_statistic = {}
@@ -161,3 +161,72 @@ with  open("new.json","w") as fp:
 
 with open("prompt.json","w") as fp:
     json.dump(ordered_data,fp = fp)
+
+
+for i in ordered_data:
+    for j in prompt_tecnique:
+        print(i[j])
+
+
+dataset = {}
+
+
+for i in ordered_data:
+    tmp = []
+    for j in key_check:
+        print(i[j])
+        if(i[j][1]!=-1 and i[j][2] != -1):
+            tmp.append(mean(i[j][1],i[j][2])) #bisogna inserire un punteggio negativo quando il codice non funziona ?
+        else:
+            tmp.append(10)
+    med_basic = np.mean(tmp)
+    tmp.clear()
+
+    for j in key_check:
+        print(i[j])
+        if(i[j][4]!=-1 and i[j][5] != -1):
+            tmp.append(mean(i[j][4],i[j][5])) #bisogna inserire un punteggio negativo quando il codice non funziona ?
+        else:
+            tmp.append(10)
+    med_naive = np.mean(tmp)
+    tmp.clear()
+
+    for j in key_check:
+        print(i[j])
+        if(i[j][7]!=-1 and i[j][8] != -1):
+            tmp.append(mean(i[j][7],i[j][8])) #bisogna inserire un punteggio negativo quando il codice non funziona ?
+        else:
+            tmp.append(10)
+    med_Comp = np.mean(tmp)
+    tmp.clear()
+
+    for j in key_check:
+        print(i[j])
+        if(i[j][10]!=-1 and i[j][11] != -1):
+            tmp.append(mean(i[j][10],i[j][11])) #bisogna inserire un punteggio negativo quando il codice non funziona ?
+        else:
+            tmp.append(10)
+    med_CWE = np.mean(tmp)
+    tmp.clear()
+
+    for j in key_check:
+        print(i[j])
+        if(i[j][13]!=-1 and i[j][14] != -1):
+            tmp.append(mean(i[j][13],i[j][14])) #bisogna inserire un punteggio negativo quando il codice non funziona ?
+        else:
+            tmp.append(10)
+    med_meme = np.mean(tmp)
+
+
+    
+    for t in tmp:
+        dataset.update({i["id"]:{i["Basic"]:med_basic,i["Naive-Secure"]:med_naive,i["CWE-Specific"]:med_CWE,i["Comprehensive"]:med_Comp,i["Persona/Memetic Proxy"]:med_meme}})
+
+
+
+
+
+
+
+with open("dataset.json","w") as fp:
+    json.dump(dataset,fp = fp)
